@@ -73,7 +73,6 @@ def crop_rotate_img():
         # 이걸 샴 서버에 전달 묶어서
         print(type(cropped_img.tobytes()))
 
-        cropped_img.save("db/" + k + '.jpg')
     return '0'
 
 
