@@ -1,5 +1,6 @@
 import boto3
 import config as cf
+from PIL import Image
 
 
 def s3_object():
@@ -13,7 +14,7 @@ def s3_object():
 def get_s3_images():
     s3 = s3_object()
     obj_list = s3.list_objects(Bucket=cf.AWS_S3_BUCKET_NAME,
-                               Prefix=cf.USERS_IMAGE_PREFIX)
+                               Prefix=s3.USERS_IMAGE_PREFIX)
 
     '''
      값을 추출하되, 첫 번째는 파일이 아닌 폴더 경로가 들어가기 때문에 제거
@@ -26,3 +27,14 @@ def get_s3_images():
     for content in content_list:
         result.append(cf.GET_S3_IMAGE_URL + content.get('Key'))
     return result
+
+
+def read_s3_images(album_id, img_url):
+    url = f'users/{album_id}/{img_url}'
+
+    s3_resource = boto3.resource('s3')
+    bucket = s3_resource.Bucket(name=cf.AWS_S3_BUCKET_NAME)
+    response = bucket.Object(url).get()
+    file_stream = response['Body']
+    img = Image.open(file_stream)
+    return img

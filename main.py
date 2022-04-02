@@ -14,7 +14,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    print(s3.get_s3_images())
     return 'Hello'
 
 
@@ -47,10 +46,13 @@ def extract_face_v2():
 
     json_response = request.get_json()
     json_obj = json.loads(json_response)
-    img_list = json_obj['img_urls']
-
-
-
+    album_id = json_obj['album_id']
+    img_url_list = json_obj['img_urls']
+    for img_url in img_url_list:
+        img = s3.read_s3_images(album_id, img_url)
+        face = rf.extract_face(img)
+        send_face_to_siamese(face)
+    return "이미지 url 수신 완료"
 
 
 def send_face_to_siamese(face):
