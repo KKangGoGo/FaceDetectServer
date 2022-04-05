@@ -18,7 +18,7 @@ def hello_world():
 
 
 # detect_faces()
-@app.route('/face/v1/extract', methods=['POST'])
+@app.route('/api/v1/face/extract', methods=['POST'])
 def extract_face_v1():
     img_byte = request.files['file_url'].read()
     data_io = io.BytesIO(img_byte)
@@ -39,7 +39,7 @@ def extract_face_v1():
 
 
 # extract_faces()
-@app.route('/face/v2/extract', methods=['POST'])
+@app.route('/api/v2/face/extract', methods=['POST'])
 def extract_face_v2():
     if not request.is_json:
         return "json으로 이미지 url을 전달해 주세요"
@@ -56,7 +56,7 @@ def extract_face_v2():
 
 
 def send_face_to_siamese(face):
-    HOST = "http://"
+    HOST = "http://localhost:8080"
     PATH = "/siamese"
     url = HOST + PATH
     header = {
