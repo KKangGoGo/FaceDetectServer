@@ -55,6 +55,19 @@ def extract_face_v2():
     return "이미지 url 수신 완료"
 
 
+# extract_faces()
+@app.route('/api/v3/face/extract', methods=['POST'])
+def extract_face_v3():
+    img_byte = request.files['file_url'].read()
+    data_io = io.BytesIO(img_byte)
+    img = Image.open(data_io)
+    image = np.array(img)
+
+    detect = rf.extract_face(image)
+    print(len(detect))
+    return "성공"
+
+
 def send_face_to_siamese(face):
     HOST = "http://localhost:8080"
     PATH = "/siamese"
