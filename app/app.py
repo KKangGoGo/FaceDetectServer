@@ -100,5 +100,12 @@ def send_face_to_mq(req):
     return res
 
 
+# siamese mq에 작업 확인
+def check(task_id):
+    url = 'localhost:5001/check/'
+    res = requests.get(url + str(task_id))
+    return res
+
+
 if __name__ == "__main__":
     app.run(debug=False, host="127.0.0.1", port=5999)
