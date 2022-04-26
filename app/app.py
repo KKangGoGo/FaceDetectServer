@@ -3,7 +3,7 @@ import json
 from flask import Flask, request
 from PIL import Image
 import io
-import base64
+import requests
 import numpy as np
 import align_face as af
 import retina_face as rf
@@ -45,6 +45,8 @@ def extract_face_v1():
         print(request.get_json())
         return "json으로 이미지 url을 전달해 주세요"
 
+    task_id_list = list()
+
     json_request = request.get_json()
     album_id = json_request['album_id']
     img_url_list = json_request['img_urls']
@@ -59,15 +61,14 @@ def extract_face_v1():
         img = s3.read_s3_images(album_id, img_url)
         np_img = np.array(img)
         faces = rf.extract_face(np_img)
-        print(type(faces[0]))
         print("얼굴 수:", len(faces))
 
         # 이미지의 얼굴 수만큼 siamese에 작업 요청
         for face in faces:
             req['file_url'] = face.tobytes()
-            send_face_to_mq(req)
+            task_id_list.append(send_face_to_mq(req))
 
-    return '작업 등록 완료'
+    return '작업 완료'
 
 
 # extract_faces()
@@ -91,9 +92,12 @@ def extract_face_v3():
 
 
 # MQ에 작업 등록
-def send_face_to_mq(response):
-    print(response)
-    return "어캐해야되냐"
+def send_face_to_mq(req):
+    print(req['album_id'], req['img_url'])
+    url = 'localhost:5001/request/siamese'
+    res = requests.post(url)
+    print('siamese mq에 전송완료')
+    return res
 
 
 if __name__ == "__main__":
