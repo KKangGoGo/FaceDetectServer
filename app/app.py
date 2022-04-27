@@ -1,9 +1,8 @@
-import json
-
 from flask import Flask, request
 from PIL import Image
 import io
 import requests
+import polling
 import numpy as np
 import align_face as af
 import retina_face as rf
@@ -45,7 +44,7 @@ def extract_face_v1():
         print(request.get_json())
         return "json으로 이미지 url을 전달해 주세요"
 
-    task_id_list = list()
+    task_id_list = list()  # mq 작업 id
 
     json_request = request.get_json()
     album_id = json_request['album_id']
@@ -67,6 +66,13 @@ def extract_face_v1():
         for face in faces:
             req['file_url'] = face.tobytes()
             task_id_list.append(send_face_to_mq(req))
+
+    # 모든 작업이 완료될 때까지 폴링
+    polling.poll(
+        lambda: check_all(task_id_list)['pending'] == False,
+        step=60,
+        poll_forever=True
+    )
 
     return '작업 완료'
 
@@ -105,6 +111,21 @@ def check(task_id):
     url = 'localhost:5001/check/'
     res = requests.get(url + str(task_id))
     return res
+
+
+# 모든 작업 check
+def check_all(task_id_list):
+    results = {
+        'pending': False
+    }
+    for task_id in task_id_list:
+        result = check(task_id)
+        if result == 'pending':
+            results['pending'] = True
+            break
+        else:
+            results[task_id] = result
+    return results
 
 
 if __name__ == "__main__":
