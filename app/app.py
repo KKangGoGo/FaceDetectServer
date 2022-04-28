@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, request
 from PIL import Image
 import io
@@ -38,17 +40,20 @@ def detect_face_v1():
 
 
 # 앨범ID와 이미지URL을 받아 얼굴 추출
-@app.route('/api/v1/face/extract', methods=['POST'])
+@app.route('/data', methods=['POST'])
 def extract_face_v1():
-    if not request.is_json:
-        print(request.get_json())
-        return "json으로 이미지 url을 전달해 주세요"
+    req_str = request.data.decode('utf8').replace("'", '"')
+    req_json = json.loads(req_str)
+    print(type(req_json))
+
+    # if not req_json.is_json:
+    #     print(req_json.get_json())
+    #     return "json으로 이미지 url을 전달해 주세요"
 
     task_id_list = list()  # mq 작업 id
 
-    json_request = request.get_json()
-    album_id = json_request['album_id']
-    img_url_list = json_request['img_urls']
+    album_id = req_json['album_id']
+    img_url_list = req_json['img_urls']
 
     # 앨범의 이미지수 만큼 extract_face()
     for img_url in img_url_list:
@@ -100,7 +105,7 @@ def extract_face_v3():
 # MQ에 작업 등록
 def send_face_to_mq(req):
     print(req['album_id'], req['img_url'])
-    url = 'localhost:5001/request/siamese'
+    url = 'localhost:5002/request/siamese'
     res = requests.post(url)
     print('siamese mq에 전송완료')
     return res
@@ -108,7 +113,7 @@ def send_face_to_mq(req):
 
 # siamese mq에 작업 확인
 def check(task_id):
-    url = 'localhost:5001/check/'
+    url = 'http://host.docker.internal:5002/check/'
     res = requests.get(url + str(task_id))
     return res
 
