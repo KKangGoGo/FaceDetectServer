@@ -44,7 +44,6 @@ def hello_world():
 def extract_face_v1():
     req_str = request.data.decode('utf8').replace("'", '"')
     req_json = json.loads(req_str)
-    print(type(req_json))
 
     # if not req_json.is_json:
     #     print(req_json.get_json())
@@ -105,7 +104,8 @@ def extract_face_v1():
 # MQ에 작업 등록
 def send_face_to_mq(req):
     print(req['album_id'], req['img_url'])
-    url = 'localhost:5002/request/siamese'
+    print('siamese mq에 전송시작')
+    url = 'http://localhost:5002/request/siamese'
     res = requests.post(url)
     print('siamese mq에 전송완료')
     return res
