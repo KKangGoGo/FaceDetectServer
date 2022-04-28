@@ -19,24 +19,24 @@ def hello_world():
 
 
 # detect_faces()
-@app.route('/api/v1/face/detect', methods=['POST'])
-def detect_face_v1():
-    img_byte = request.files['file_url'].read()
-    data_io = io.BytesIO(img_byte)
-    img = Image.open(data_io)
-    image = np.array(img)
-
-    detect = rf.detect_face(image)
-    for k in detect:
-        bbox = detect[k]['facial_area']
-        left_eye = detect[k]['landmarks']['left_eye']
-        right_eye = detect[k]['landmarks']['right_eye']
-
-        angle = af.align_angle(left_eye, right_eye)
-
-        face_img = img.crop(tuple(bbox)).rotate(angle)
-        print(type(face_img))
-        return "성공"
+# @app.route('/api/v1/face/detect', methods=['POST'])
+# def detect_face_v1():
+#     img_byte = request.files['file_url'].read()
+#     data_io = io.BytesIO(img_byte)
+#     img = Image.open(data_io)
+#     image = np.array(img)
+#
+#     detect = rf.detect_face(image)
+#     for k in detect:
+#         bbox = detect[k]['facial_area']
+#         left_eye = detect[k]['landmarks']['left_eye']
+#         right_eye = detect[k]['landmarks']['right_eye']
+#
+#         angle = af.align_angle(left_eye, right_eye)
+#
+#         face_img = img.crop(tuple(bbox)).rotate(angle)
+#         print(type(face_img))
+#         return "성공"
 
 
 # 앨범ID와 이미지URL을 받아 얼굴 추출
@@ -83,23 +83,23 @@ def extract_face_v1():
 
 
 # extract_faces()
-@app.route('/api/v3/face/extract', methods=['POST'])
-def extract_face_v3():
-    img_byte = request.files['file_url'].read()
-    data_io = io.BytesIO(img_byte)
-    img = Image.open(data_io)
-    image = np.array(img)
-
-    detects = rf.extract_face(image)
-    faces = []
-    for d in detects:
-        img = Image.fromarray(d)
-        faces.append(img.convert('RGB'))
-
-    for f in faces:
-        print(type(f))
-    print(len(detects))
-    return "성공"
+# @app.route('/api/v3/face/extract', methods=['POST'])
+# def extract_face_v3():
+#     img_byte = request.files['file_url'].read()
+#     data_io = io.BytesIO(img_byte)
+#     img = Image.open(data_io)
+#     image = np.array(img)
+#
+#     detects = rf.extract_face(image)
+#     faces = []
+#     for d in detects:
+#         img = Image.fromarray(d)
+#         faces.append(img.convert('RGB'))
+#
+#     for f in faces:
+#         print(type(f))
+#     print(len(detects))
+#     return "성공"
 
 
 # MQ에 작업 등록
