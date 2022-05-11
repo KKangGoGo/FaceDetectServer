@@ -1,12 +1,9 @@
 import json
 
 from flask import Flask, request
-from PIL import Image
-import io
 import requests
 import polling
 import numpy as np
-import align_face as af
 import retina_face as rf
 import s3_download as s3
 

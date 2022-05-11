@@ -12,6 +12,7 @@ RUN apt-get install -y libglib2.0-0 libsm6 libxrender1 libxext6
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN pip install polling
 
 
 # 파일을 모두 컨테이너로 복사
