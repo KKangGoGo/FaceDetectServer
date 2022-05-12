@@ -4,3 +4,4 @@ Flask~=2.0.3
 Pillow~=9.0.1
 boto3~=1.21.32
 retina-face==0.0.10
+polling~=0.3.2
