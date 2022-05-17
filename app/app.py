@@ -35,7 +35,12 @@ def hello_world():
 #         print(type(face_img))
 #         return "성공"
 
-
+# detect -> mq2
+# {
+#   album_id : "",
+#   original_image_url : "",
+#   file_image : ""
+# }
 # 앨범ID와 이미지URL을 받아 얼굴 추출
 @app.route('/data', methods=['POST'])
 def extract_face_v1():
@@ -56,7 +61,6 @@ def extract_face_v1():
         req = {
             'album_id': album_id,
             'original_image_url': img_url,
-            # 'file_url': ''
         }
         img = s3.read_s3_images(album_id, img_url)
         np_img = np.array(img)
