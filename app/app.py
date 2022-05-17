@@ -55,8 +55,8 @@ def extract_face_v1():
     for img_url in img_url_list:
         req = {
             'album_id': album_id,
-            'img_url': img_url,
-            'file_url': ''
+            'original_image_url': img_url,
+            # 'file_url': ''
         }
         img = s3.read_s3_images(album_id, img_url)
         np_img = np.array(img)
@@ -65,12 +65,12 @@ def extract_face_v1():
 
         # 이미지의 얼굴 수만큼 siamese에 작업 요청
         for face in faces:
-            req['file_url'] = face.tobytes()
-            task_id_list.append(send_face_to_mq(req))
+            # req['file_url'] = face.tobytes()
+            task_id_list.append(send_face_to_mq(req, face))
 
     # 모든 작업이 완료될 때까지 폴링
     polling.poll(
-        lambda: check_all(task_id_list)['pending'] == False,
+        lambda: check_all(task_id_list)['pending'] is False,
         step=60,
         poll_forever=True
     )
@@ -98,13 +98,20 @@ def extract_face_v1():
 #     return "성공"
 
 
+# detect -> mq2
+# {
+#   album_id : "",
+#   original_image_url : "",
+#   file_image : ""
+# }
+
 # MQ에 작업 등록
-def send_face_to_mq(req):
+def send_face_to_mq(req, face):
     print(req['album_id'], req['img_url'])
-    print('siamese mq에 전송시작')
+    print('-----mq2에 전송시작-----')
     url = 'http://localhost:5002/request/siamese'
-    res = requests.post(url)
-    print('siamese mq에 전송완료')
+    res = requests.post(url, files=face)
+    print('-----mq2에 전송완료-----')
     return res
 
 
