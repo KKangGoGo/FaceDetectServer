@@ -6,6 +6,7 @@ import polling
 import numpy as np
 import retina_face as rf
 import s3_download as s3
+import config as cf
 import uuid
 from PIL import Image
 import io
@@ -53,7 +54,7 @@ def extract_face_v1():
             out_img.seek(0)
             s3.upload_image(out_img, image_id, index)
 
-            task_id_list.append(bytes.decode(send_face_to_mq(album_id, img_url, f'https://tmp-face-bucket.s3.ap-northeast-2.amazonaws.com/{image_id}/{index}.png')))
+            task_id_list.append(bytes.decode(send_face_to_mq(album_id, img_url, f'https://{cf.AWS_S3_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{image_id}/{index}.png')))
             index += 1
 
     print(task_id_list)
