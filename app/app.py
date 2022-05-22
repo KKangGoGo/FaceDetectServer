@@ -66,7 +66,7 @@ def extract_face_v1():
         poll_forever=True
     )
 
-    return result
+    return "Ok"
 
 
 # MQ2에 작업 등록
