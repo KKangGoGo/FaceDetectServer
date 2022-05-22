@@ -78,7 +78,7 @@ def send_face_to_mq(album_id, img_url, file_image):
     print(req)
     print('-----mq2에 전송시작-----')
 
-    url = 'http://3.39.25.192/request/siamese'
+    url = 'http://43.200.5.182/request/siamese'
     headers = {"Content-Type": "application/json"}
 
     res = requests.post(url, data=json.dumps(req), headers=headers)
@@ -89,7 +89,7 @@ def send_face_to_mq(album_id, img_url, file_image):
 
 # mq2에 작업 확인
 def check(task_id):
-    url = 'http://3.39.25.192/check/'
+    url = 'http://43.200.5.182/check/'
     res = requests.get(url + str(task_id))
     print("check " + task_id, bytes.decode(res.content))
     return res.content
