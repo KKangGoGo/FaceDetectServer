@@ -66,7 +66,8 @@ def extract_face_v1():
         poll_forever=True
     )
 
-    return jsonify("OK")
+    # mq1에 리턴
+    return jsonify(str(task_id_list))
 
 
 # MQ2에 작업 등록
