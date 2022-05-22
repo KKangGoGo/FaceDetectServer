@@ -60,14 +60,14 @@ def extract_face_v1():
     print(task_id_list)
 
     # 모든 작업이 완료될 때까지 폴링
-    result = polling.poll(
+    polling.poll(
         lambda: check_all(task_id_list)['PENDING'] is False,
         step=3,
         poll_forever=True
     )
 
     # mq1에 리턴
-    return jsonify(str(task_id_list))
+    return jsonify(check_all(task_id_list))
 
 
 # MQ2에 작업 등록
