@@ -72,7 +72,6 @@ def extract_face_v1():
         poll_forever=True
     )
 
-    print(response)
     # mq1에 리턴
     return jsonify(response)
 
@@ -125,7 +124,7 @@ def check_all(task_id_list, response):
             if result['person_username'] in response:
                 response.get(result['person_username']).append(result['original_image_url'])
             else:
-                response['result'][result['person_username']] = result['original_image_url']
+                response['result'][result['person_username']] = [result['original_image_url']]
 
     return results
 
