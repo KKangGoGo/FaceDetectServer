@@ -23,7 +23,7 @@ def read_s3_images(album_id, img_url):
 
 def upload_image(img, uuid, num):
     s3 = s3_client()
-    s3.put_object(Key=str(uuid)+'/'+str(num)+'.png', Body=img, Bucket='tmp-face-bucket')
+    s3.put_object(Key=str(uuid)+'/'+str(num)+'.png', Body=img, Bucket=cf.AWS_S3_BUCKET_NAME)
 
 
 def delete_image(uuid, num):
