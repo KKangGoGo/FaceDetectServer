@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 import polling
 import numpy as np
@@ -66,7 +66,7 @@ def extract_face_v1():
         poll_forever=True
     )
 
-    return "Ok"
+    return jsonify("OK")
 
 
 # MQ2에 작업 등록
