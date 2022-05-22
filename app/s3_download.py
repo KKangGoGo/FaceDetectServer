@@ -10,8 +10,8 @@ def s3_client():
                         region_name=cf.AWS_S3_BUCKET_REGION)
 
 
-def read_s3_images(album_id, img_url):
-    url = f'album/{album_id}/{img_url}'
+def read_s3_images(img_url):
+    url = img_url
     print(url)
     s3_resource = boto3.resource('s3')
     bucket = s3_resource.Bucket(name=cf.AWS_S3_BUCKET_NAME)

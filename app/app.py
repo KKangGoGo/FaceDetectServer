@@ -38,7 +38,7 @@ def extract_face_v1():
 
     # 앨범의 이미지수 만큼 extract_face()
     for img_url in img_url_list:
-        img = s3.read_s3_images(album_id, img_url)
+        img = s3.read_s3_images(img_url)
         np_img = np.array(img)
         faces = rf.extract_face(np_img)
         print("얼굴 수:", len(faces))
