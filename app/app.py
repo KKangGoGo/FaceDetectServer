@@ -54,7 +54,7 @@ def extract_face_v1():
             out_img.seek(0)
             s3.upload_image(out_img, image_id, index)
 
-            task_id_list.append(bytes.decode(send_face_to_mq(album_id, img_url, f'https://{cf.AWS_S3_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{image_id}/{index}.png')))
+            task_id_list.append(bytes.decode(send_face_to_mq(album_id, img_url, f'https://{cf.AWS_S3_UP_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{image_id}/{index}.png')))
             index += 1
 
     print(task_id_list)
@@ -73,7 +73,7 @@ def extract_face_v1():
 def send_face_to_mq(album_id, img_url, file_image):
     req = {
         "album_id": album_id,
-        "original_image_url": img_url,
+        "original_image_url": f'https://{cf.AWS_S3_UP_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com/{img_url}',
         "file_image": file_image
     }
     print(req)
