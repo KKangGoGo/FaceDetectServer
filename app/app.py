@@ -60,14 +60,20 @@ def extract_face_v1():
     print(task_id_list)
 
     # 모든 작업이 완료될 때까지 폴링
+    response = {
+        "album_id": album_id,
+        "result": {
+
+        }
+    }
     polling.poll(
-        lambda: check_all(task_id_list)['PENDING'] is False,
+        lambda: check_all(task_id_list, response)['PENDING'] is False,
         step=3,
         poll_forever=True
     )
 
     # mq1에 리턴
-    return jsonify(check_all(task_id_list))
+    return jsonify(response)
 
 
 # MQ2에 작업 등록
@@ -98,7 +104,7 @@ def check(task_id):
 
 
 # 모든 작업 check
-def check_all(task_id_list):
+def check_all(task_id_list, response):
     results = {
         'PENDING': False
     }
@@ -109,8 +115,13 @@ def check_all(task_id_list):
             pprint.pprint(results)
             break
         else:
+            task_id_list.remove(task_id)
             results[task_id] = result
             pprint.pprint(results)
+
+            result = json.loads(result)
+            response.get(key=result['person_username'], default=[]).append(result['original_image_url'])
+
     return results
 
 
